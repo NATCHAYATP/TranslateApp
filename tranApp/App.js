@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+
 // Import required components
 import {
   SafeAreaView,
@@ -12,14 +13,19 @@ import {
 } from 'react-native';
 
 // Import Image Picker
-// import ImagePicker from 'react-native-image-picker';
+//import ImagePicker from 'react-native-image-picker';
 import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
+import RNFS from 'react-native-fs';
 
 const App = () => {
-  const [filePath, setFilePath] = useState({});
+  const [tran, setTran] = useState({});
+  const [Etime, setEtime] = useState(0);
+  const [Stime, setStime] = useState(0);
+  // const [SEtime, setSEtime] = useState(0);
+  const baseUrl = 'http://5493-171-101-99-115.ngrok.io';
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -89,14 +95,28 @@ const App = () => {
           alert(response.errorMessage);
           return;
         }
-        console.log('base64 -> ', response.base64);
-        console.log('uri -> ', response.uri);
-        console.log('width -> ', response.width);
-        console.log('height -> ', response.height);
-        console.log('fileSize -> ', response.fileSize);
-        console.log('type -> ', response.type);
-        console.log('fileName -> ', response.fileName);
-        setFilePath(response);
+        console.log('base64 -> ', response.assets[0].base64);
+        console.log('uri -> ', response.assets[0].uri);
+        console.log('width -> ', response.assets[0].width);
+        console.log('height -> ', response.assets[0].height);
+        console.log('fileSize -> ', response.assets[0].fileSize);
+        console.log('type -> ', response.assets[0].type);
+        console.log('fileName -> ', response.assets[0].fileName);
+
+        RNFS.readFile(response.assets[0].uri, 'base64')
+        .then(res =>{
+        fetch(`${baseUrl}/learn`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          'picture' : res
+        })
+      });
+      });
+
       });
     }
   };
@@ -124,21 +144,85 @@ const App = () => {
         alert(response.errorMessage);
         return;
       }
-      console.log('base64 -> ', response.base64);
-      console.log('uri -> ', response.uri);
-      console.log('width -> ', response.width);
-      console.log('height -> ', response.height);
-      console.log('fileSize -> ', response.fileSize);
-      console.log('type -> ', response.type);
-      console.log('fileName -> ', response.fileName);
-      setFilePath(response);
+      console.log('base64 -> ', response.assets[0].base64);
+      console.log('uri -> ', response.assets[0].uri);
+      console.log('width -> ', response.assets[0].width);
+      console.log('height -> ', response.assets[0].height);
+      console.log('fileSize -> ', response.assets[0].fileSize);
+      console.log('type -> ', response.assets[0].type);
+      console.log('fileName -> ', response.assets[0].fileName);
+      setStime(performance.now())
+
+      // console.log('startTime -> ',('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
+      // setStime(('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
+      //console.log('Stime! -> ',Stime);
+
+      RNFS.readFile(response.assets[0].uri, 'base64')
+      .then(res =>{
+        fetch(`${baseUrl}/learn`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          'picture' : res
+        })
+        });
+      
+      });
     });
   };
+
+  const getTran = () => {
+
+    fetch(`${baseUrl}/learn`, {
+      method: "GET",
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        setTran(response)
+      })
+      const t1 = performance.now();
+      console.log(`start to end use ${t1 - Stime} milliseconds.`);
+      // setEtime(('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
+      // console.log('endTime -> ',('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2))
+      //console.log('endTime! -> ',Etime)
+      
+    }
+
+    // useEffect(() => {
+    //   console.log("The value after update", Etime);
+    //   // console.log("The value after update", Stime);
+    //   //startToEndTime();
+    // }, [Etime])
+
+  // const startToEndTime = () => {
+  //   const SH = ((parseInt(Stime.charAt(0))*10)+(parseInt(Stime.charAt(1))))*3600
+  //   const SM = ((parseInt(Stime.charAt(3))*10)+(parseInt(Stime.charAt(4))))*60
+  //   const SS = (parseInt(Stime.charAt(6))*10)+(parseInt(Stime.charAt(7)))
+  //   const EH = ((parseInt(Stime.charAt(0))*10)+(parseInt(Stime.charAt(1))))*3600
+  //   const EM = ((parseInt(Stime.charAt(3))*10)+(parseInt(Stime.charAt(4))))*60
+  //   const ES = (parseInt(Etime.charAt(6))*10)+(parseInt(Etime.charAt(7)))
+    
+  //   setSEtime(String(EH+EM+ES-SH-SM-SS))
+  //   console.log('SEtime -> ',String(EH+EM+ES-SH-SM-SS))
+  //   console.log('Stime -> ',Stime)
+  //   console.log('Etime -> ',Etime)
+  // }
+
+//   useEffect(() => {
+//     startToEndTime();
+//  }, [])
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Text style={styles.titleText}>
-        Example of Image Picker in React Native
+        Picture To Translate
       </Text>
       <View style={styles.container}>
           
@@ -149,10 +233,10 @@ const App = () => {
           style={styles.imageStyle}
         /> */}
         {/* <Image
-          source={{uri: filePath.uri}}
+          source={{uri: filePath.assets[0].uri}}
           style={styles.imageStyle}
         />
-        <Text style={styles.textStyle}>{filePath.uri}</Text> */}
+        <Text style={styles.textStyle}>{filePath.assets[0].uri}</Text> */}
 
         <TouchableOpacity
           activeOpacity={0.5}
@@ -165,25 +249,27 @@ const App = () => {
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles.buttonStyle}
-          onPress={() => captureImage('video')}>
-          <Text style={styles.textStyle}>
-            Launch Camera for Video
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.buttonStyle}
           onPress={() => chooseFile('photo')}>
           <Text style={styles.textStyle}>Choose Image</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles.buttonStyle}
-          onPress={() => chooseFile('video')}>
-          <Text style={styles.textStyle}>Choose Video</Text>
+          onPress={() => getTran()}>
+          <Text style={styles.textStyle}>start</Text>
         </TouchableOpacity>
+        <Text style={styles.textStyle}>{`${tran.word}`}</Text>
+        <Text style={styles.textStyle}>{`${tran.translate}`}</Text>
+        {/* <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.buttonStyle}
+          onPress={() => startToEndTime()}>
+          <Text style={styles.textStyle}>time</Text>
+        </TouchableOpacity>
+        <Text style={styles.textStyle}>{`${SEtime}`+' วินาที'}</Text> */}
       </View>
     </SafeAreaView>
+    
   );
 };
 
