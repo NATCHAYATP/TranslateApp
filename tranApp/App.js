@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 // Import required components
 import {
@@ -12,8 +12,6 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 
-// Import Image Picker
-//import ImagePicker from 'react-native-image-picker';
 import {
   launchCamera,
   launchImageLibrary
@@ -22,10 +20,10 @@ import RNFS from 'react-native-fs';
 
 const App = () => {
   const [tran, setTran] = useState({});
-  const [Etime, setEtime] = useState(0);
+  //const [Etime, setEtime] = useState(0);
   const [Stime, setStime] = useState(0);
-  // const [SEtime, setSEtime] = useState(0);
-  const baseUrl = 'http://af7f-171-96-233-40.ngrok.io';
+
+  const baseUrl = 'http://ad00-171-96-233-40.ngrok.io';
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -153,10 +151,6 @@ const App = () => {
       console.log('fileName -> ', response.assets[0].fileName);
       setStime(performance.now())
 
-      // console.log('startTime -> ',('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
-      // setStime(('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
-      //console.log('Stime! -> ',Stime);
-
       RNFS.readFile(response.assets[0].uri, 'base64')
       .then(res =>{
         fetch(`${baseUrl}/learn`, {
@@ -189,35 +183,8 @@ const App = () => {
       })
       const t1 = performance.now();
       console.log(`start to end use ${t1 - Stime} milliseconds.`);
-      // setEtime(('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2));
-      // console.log('endTime -> ',('0'+new Date().getHours()).slice(-2) + ':' +('0'+new Date().getMinutes()).slice(-2) + ':' + ('0'+new Date().getSeconds()).slice(-2))
-      //console.log('endTime! -> ',Etime)
       
     }
-
-    // useEffect(() => {
-    //   console.log("The value after update", Etime);
-    //   // console.log("The value after update", Stime);
-    //   //startToEndTime();
-    // }, [Etime])
-
-  // const startToEndTime = () => {
-  //   const SH = ((parseInt(Stime.charAt(0))*10)+(parseInt(Stime.charAt(1))))*3600
-  //   const SM = ((parseInt(Stime.charAt(3))*10)+(parseInt(Stime.charAt(4))))*60
-  //   const SS = (parseInt(Stime.charAt(6))*10)+(parseInt(Stime.charAt(7)))
-  //   const EH = ((parseInt(Stime.charAt(0))*10)+(parseInt(Stime.charAt(1))))*3600
-  //   const EM = ((parseInt(Stime.charAt(3))*10)+(parseInt(Stime.charAt(4))))*60
-  //   const ES = (parseInt(Etime.charAt(6))*10)+(parseInt(Etime.charAt(7)))
-    
-  //   setSEtime(String(EH+EM+ES-SH-SM-SS))
-  //   console.log('SEtime -> ',String(EH+EM+ES-SH-SM-SS))
-  //   console.log('Stime -> ',Stime)
-  //   console.log('Etime -> ',Etime)
-  // }
-
-//   useEffect(() => {
-//     startToEndTime();
-//  }, [])
 
   return (
     <SafeAreaView style={{flex: 1}}>
