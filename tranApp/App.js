@@ -25,7 +25,7 @@ const App = () => {
   const [Etime, setEtime] = useState(0);
   const [Stime, setStime] = useState(0);
   // const [SEtime, setSEtime] = useState(0);
-  const baseUrl = 'http://5493-171-101-99-115.ngrok.io';
+  const baseUrl = 'http://af7f-171-96-233-40.ngrok.io';
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -225,18 +225,6 @@ const App = () => {
         Picture To Translate
       </Text>
       <View style={styles.container}>
-          
-        {/* <Image
-          source={{
-            uri: 'data:image/jpeg;base64,' + filePath.data,
-          }}
-          style={styles.imageStyle}
-        /> */}
-        {/* <Image
-          source={{uri: filePath.assets[0].uri}}
-          style={styles.imageStyle}
-        />
-        <Text style={styles.textStyle}>{filePath.assets[0].uri}</Text> */}
 
         <TouchableOpacity
           activeOpacity={0.5}
@@ -260,13 +248,7 @@ const App = () => {
         </TouchableOpacity>
         <Text style={styles.textStyle}>{`${tran.word}`}</Text>
         <Text style={styles.textStyle}>{`${tran.translate}`}</Text>
-        {/* <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.buttonStyle}
-          onPress={() => startToEndTime()}>
-          <Text style={styles.textStyle}>time</Text>
-        </TouchableOpacity>
-        <Text style={styles.textStyle}>{`${SEtime}`+' วินาที'}</Text> */}
+        
       </View>
     </SafeAreaView>
     
