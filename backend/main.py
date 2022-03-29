@@ -25,17 +25,15 @@ def learn():
 
         pic1 = body['picture']
         pic2 = pic1.encode('utf-8')
-        #im_buf_arr = cv2.imencode(".jpg", pic2)
-        
-        with open("imageToSave.png", "wb") as fh:
-            fh.write(base64.decodebytes(pic2))
-
-        txt = pytesseract.image_to_string("imageToSave.png", lang='eng')
+        pic3 = base64.decodebytes(pic2)
+            
+        byte_array_image = bytes_to_image(pic3)
+        txt = pytesseract.image_to_string(byte_array_image, lang='eng')
 
         txt = txt.split('\n')
         for i in txt :
             new_txt = new_txt+' '+i
-    
+        
         r=translator.translate(new_txt, dest='th', src='en')
         textTran['data'] = r.text
         textTran['word'] = new_txt
@@ -48,6 +46,10 @@ def learn():
     elif request.method == 'GET':
 
         return { "translate": (textTran['data']), "word":(textTran['word'])}, 200
+
+def bytes_to_image(image_bytes):
+    io_bytes = io.BytesIO(image_bytes)
+    return Image.open(io_bytes)
 
 if __name__ == '__main__':
     app.run(debug = True)
